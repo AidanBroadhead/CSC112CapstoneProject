@@ -15,7 +15,7 @@ public class Scan {
     Scanner scanner = new Scanner(System.in);
 
     // Open file
-    File loggedTime = new File("/Users/aidanbroadhead/IdeaProjects/CSC112CapstoneProject/src/TimeStamps.txt");
+    File loggedTime = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112/CapstoneProject/src/TimeStamps.txt");
 
     // initializes count to 0
     int count = 0;
@@ -56,10 +56,10 @@ public class Scan {
                     break;
                 }
 
-                bWriter.write("ID Scanned: " + closeGym + "at" + currentTime.format(formatter));
+                bWriter.write("ID Scanned: " + closeGym + "at " + currentTime.format(formatter));
                 bWriter.newLine();
 
-                count += 1;
+                count = addCount(count);
                 System.out.println("You were scanned in at: " + currentTime.format(formatter));
                 System.out.println("Total number of people in gym: " + count);
                 System.out.println();
@@ -78,12 +78,13 @@ public class Scan {
 
     }
 
+    public static int addCount(int count) {
+        // class that adds to count when someone scans in
+        count += 1;
+        return count;
+    }
 
     /* potential classes
-
-    public void addCount(int count) {
-        // class that adds to count when someone scans in
-    }
 
     public void subtractCount(int count) {
         // class that subtracts from count when someone scans out
