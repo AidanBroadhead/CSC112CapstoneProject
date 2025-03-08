@@ -7,15 +7,21 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Scan {
 
     public static void main(String[] args) {
+
     // names the scanner
     Scanner scanner = new Scanner(System.in);
 
+    // create array list of members
+    ArrayList<Member> memberInfo = new ArrayList<>();
+
     // Open file
     File loggedTime = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112/CapstoneProject/src/TimeStamps.txt");
+    File sortedMembers = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112/CapstoneProject/src/OutputSortedMembers.txt");
 
     // initializes count to 0
     int count = 0;
@@ -84,7 +90,21 @@ public class Scan {
         return count;
     }
 
-    /* potential classes
+    /* additional potential classes
+
+    public void sortMembers() {
+        Member.sortByIDNumber(memberInfo);
+
+    }
+
+    public void createNewMember () {
+        Member member = new Member();
+        member.setName();
+        member.setAge();
+        member.setIDNumber();
+        memberInfo.add(member);
+
+    }
 
     public void subtractCount(int count) {
         // class that subtracts from count when someone scans out
