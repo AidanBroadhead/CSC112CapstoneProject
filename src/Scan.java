@@ -1,4 +1,4 @@
-package src;// imports everything for the scanners and date/time
+package src;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,121 +7,99 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Scan {
 
     public static void main(String[] args) {
 
-    // names the scanner
-    Scanner scanner = new Scanner(System.in);
+        // Create a Scanner object to capture user input
+        Scanner scanner = new Scanner(System.in);
 
-    // create array list of members
-    ArrayList<Member> memberInfo = new ArrayList<>();
+        // Open files for logging timestamps and sorted members
+        File loggedTime = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112Labs/CapstoneProject/src/TimeStamps.txt");
+        File sortedMembers = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112Labs/CapstoneProject/src/OutputSortedMembers.txt");
 
-    // Open file
-    File loggedTime = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112/CapstoneProject/src/TimeStamps.txt");
-    File sortedMembers = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112/CapstoneProject/src/OutputSortedMembers.txt");
+        // Track number of people in the gymp
+        int count = 0;
 
-    // initializes count to 0
-    int count = 0;
+        // DateTimeFormatter for consistent timestamp format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
 
-    // sets the format for the date and time at scan
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+        Queue gymQueue = new Queue();
 
-        // writes the timestamps of people entering and leaving the gym into txt file
-
+        // Main loop for gym operations
+        boolean isOpen = true;
         try {
             FileWriter fWriter = new FileWriter(loggedTime);
             BufferedWriter bWriter = new BufferedWriter(fWriter);
 
-            // sets the boolean to true because the gym is open
-            boolean isOpen = true;
+            System.out.println("Scan your ID (press enter) or type 'q' to quit...");
 
-            // while the store is open, check to see if an ID is scanned and save the time
             while (isOpen) {
-
-                // creates an empty string and creates object for current time
-                String closeGym = "";
-                String openGym = "";
+                // Get the current time for logging
                 LocalDateTime currentTime = LocalDateTime.now();
 
-                // prints the time the person was scanned in at if certain key is pressed (aka ID is scanned)
-                // System.out.println("Current Time: " + currentTime.format(formatter));
-                System.out.println();
-                System.out.println("Scan your ID (press enter)...");
+                // Capture user input
+                String scanInput = scanner.nextLine();
 
-                // if enter key is pressed, the time of the scan is logged
-                closeGym = scanner.nextLine();
-                // openGym = scanner.nextLine();
-
-
-                // if "q" is pressed, the gym closes and loop stops running
-                if (closeGym.equals("q")) {
+                if (scanInput.equals("q")) {
                     isOpen = false;
                     break;
                 }
+                // Handle member scan-in or scan-out
+                if (scanInput.equals("m")) {
+                    // Handle member entry
+                    Member.welcomeMember(scanner);  // Passing the scanner object here
+                    gymQueue.enqueue(scanner);
+                    count = addCount(count);
+                    System.out.println("You were scanned in at: " + currentTime.format(formatter));
+                    System.out.println("Total number of people in gym: " + count);
+                    System.out.println("\nScan your ID (press enter) or type 'q' to quit...");
+                } else if (scanInput.equals("nm")) {
+                    // New member scan
+                    Member.createNewMember(scanner);  // Create a new member if 'nm' is pressed
+                    System.out.println("Your account has been created!");
+                    System.out.println("\nScan your ID (press enter) or type 'q' to quit...");
+                } else if (scanInput.equals("s")) {
+                    // Handle scan out
+                    gymQueue.removeExpiredMembers();  // Remove members who have been in for over 1 hour
+                    count = gymQueue.size();  // Update the count
+                    System.out.println("A person has scanned out. Total number in gym: " + count);
+                } else if (scanInput.equals("p")) {
+                    // Print all members to the output file
+                    Member.printAllMembers();  // This will call the static method from Member class
+                    System.out.println("All members have been printed to the file.");
 
-                bWriter.write("ID Scanned: " + closeGym + "at " + currentTime.format(formatter));
-                bWriter.newLine();
+                } else if (scanInput.equals("c")) {
+                    gymQueue.printQueue();
+                }else {
+                    // Log scan-in with timestamp
+                    bWriter.write("ID Scanned: " + scanInput + " at " + currentTime.format(formatter));
+                    bWriter.newLine();
+                }
 
-                count = addCount(count);
-                System.out.println("You were scanned in at: " + currentTime.format(formatter));
-                System.out.println("Total number of people in gym: " + count);
                 System.out.println();
-
-//                if (openGym.equals("o")) {
-//                    isOpen = true;
-//                }
             }
-            // Close the BufferWriter Connection
+
+            // Close the BufferedWriter
             bWriter.close();
 
         } catch (IOException e) {
-            System.out.println("File not found" + e.getMessage());
+            System.out.println("Error writing to file: " + e.getMessage());
         }
-
-
     }
 
+    // Method to increment the count
     public static int addCount(int count) {
-        // class that adds to count when someone scans in
         count += 1;
         return count;
     }
 
-    /* additional potential classes
-
-    public void sortMembers() {
-        Member.sortByIDNumber(memberInfo);
-
+    // Method to decrement the count when someone scans out
+    public static int subtractCount(int count) {
+        if (count > 0) {
+            count -= 1;
+        }
+        return count;
     }
-
-    public void createNewMember () {
-        Member member = new Member();
-        member.setName();
-        member.setAge();
-        member.setIDNumber();
-        memberInfo.add(member);
-
-    }
-
-    public void subtractCount(int count) {
-        // class that subtracts from count when someone scans out
-    }
-
-    public void closeGym(String closeGym) {
-        // class that closes the gym if certain key is pressed
-    }
-
-    public void openGym(String openGym) {
-        // class that opens the gym if certain key is pressed
-    }
-
-    public void statistics() {
-        // class that outputs summary statistics for the day
-    }
-
-    */
-
-    }
+}

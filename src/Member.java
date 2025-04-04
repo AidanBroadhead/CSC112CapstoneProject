@@ -1,26 +1,43 @@
 package src;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Member {
-    // private fields
+    // Private fields
     private String name;
     private int age;
     private int IDNumber;
 
-    // default constructor
-    public Member () {
-        name = "";
-        age = 0;
-        IDNumber = 0;
+    // Random object for ID generation
+
+    // ArrayList of members
+    static ArrayList<Member> memberInfo = new ArrayList<>();
+    static int tempID = 0;
+
+    // Default constructor
+    public Member() {
+        this.name = "";
+        this.age = 0;
+        this.IDNumber = 0;
     }
 
-    // parameterized constructor
+    // Parameterized constructor
     public Member(String name, int age, int IDNumber) {
         this.name = name;
         this.age = age;
         this.IDNumber = IDNumber;
     }
 
+    // Getters and setters
     public String getName() {
         return name;
     }
@@ -45,40 +62,115 @@ public class Member {
         this.IDNumber = IDNumber;
     }
 
-    // sorting method
+
+    // Method to sort members by ID (using Java's built-in comparator)
     public static void sortByIDNumber(ArrayList<Member> memberInfo) {
-        // set boolean to false and length to the size
-        boolean isSorted = false;
-        int length = memberInfo.size();
+        Member.memberInfo.sort((m1, m2) -> Integer.compare(m1.getIDNumber(), m2.getIDNumber()));
+    }
 
-        while (!isSorted) {
-            isSorted = true;
-            for (int i = 0; i < length - 1; i++) {
-                // uses comparator to compare adjacent elements
-                if (new compare().compare(memberInfo.get(i), memberInfo.get(i + 1)) > 0) {
-                    // call swap
-                    swap(memberInfo, i, i + 1);
-                    // make the loop run again since a swap occurred
-                    isSorted = false;
-                }
+    // Method to search for a member by ID
+    public static String searchByID(int IDNumber) {
+        for (Member member : memberInfo) {
+            if (member.getIDNumber() == IDNumber) {
+                return member.getName();
             }
-            // lowers size of list by 1
-            length = length - 1;
         }
+        return "ID not found";
     }
 
-    // swap method
-    public static void swap(ArrayList<Member> memberInfo, int a, int b) {
-        // creates temporary variable for the swap and then swaps consecutive elements
-        Member temp = memberInfo.get(a);
-        memberInfo.set(a, memberInfo.get(b));
-        memberInfo.set(b, temp);
-    }
-
-    // prints member info
+    // Method to print member info
     public void printMemberInfo() {
         System.out.println("Name: " + name);
         System.out.println("Age: " + age);
         System.out.println("Member ID: " + IDNumber);
     }
+
+    // Method to welcome a member (assumes the ID has been validated)
+    public static void welcomeMember(Scanner scnr) {
+        System.out.println("Enter your ID number:");
+        int inputID = scnr.nextInt();
+        String memberName = searchByID(inputID);
+        System.out.println("Welcome, " + memberName + "!");
+        tempID = inputID;
+    }
+
+    // Method to create a new member (separated for clarity)
+    public static void createNewMember(Scanner scnr) {
+        System.out.println("Enter your name:");
+        String name = scnr.next();
+
+        System.out.println("Enter your age:");
+        int age = scnr.nextInt();
+
+        // Assign a unique ID
+        int newID = assignID();
+
+        // Create new member and add to the list
+        Member newMember = new Member(name, age, newID);
+        memberInfo.add(newMember);
+
+        System.out.println("Here is your new ID number: " + newID);
+    }
+
+
+
+    public static void printAllMembers() {
+        // Sort members by ID
+        sortByIDNumber(memberInfo);
+
+        // Define the output file path
+        File outputFile = new File("/Users/aidanbroadhead/IdeaProjects/CSC 112Labs/CapstoneProject/src/OutputSortedMembers.txt");
+
+        // Attempt to write member information to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            // Loop through all members and write their info to the file
+            for (Member member : memberInfo) {
+                writer.write("Name: " + member.getName());
+                writer.newLine();
+                writer.write("Age: " + member.getAge());
+                writer.newLine();
+                writer.write("ID Number: " + member.getIDNumber());
+                writer.newLine();
+                writer.newLine();  // Add a blank line between members for readability
+            }
+            System.out.println("Member information has been written to the file successfully.");
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
+    }
+
+
+    // Method to generate a unique ID
+    // Method to generate a unique ID
+    private static int assignID() {
+        int randomID = 0;
+        boolean isUnique = false;
+        int attempts = 0;
+
+        Random rand = new Random();
+        // Generate a unique ID
+        while (!isUnique) {
+            randomID = rand.nextInt(5000);  // Random ID in range 0-4999
+            isUnique = true;
+
+            // Check if the ID is unique by iterating through existing members
+            for (Member member : memberInfo) {
+                if (member.getIDNumber() == randomID) {
+                    isUnique = false;  // If ID is not unique, break and generate a new one
+                    break;
+                }
+            }
+
+            attempts++;
+
+            // If 5000 attempts fail to generate a unique ID, exit to avoid infinite loop
+            if (attempts >= 5000) {
+                throw new IllegalStateException("Unable to generate a unique ID, ID space exhausted.");
+            }
+        }
+        return randomID;
+    }
+
+
+
 }
