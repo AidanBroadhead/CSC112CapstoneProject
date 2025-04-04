@@ -84,4 +84,3 @@ public class Queue extends Member {
         System.out.println("Total Members in Gym: " + size());
     }
 }
-

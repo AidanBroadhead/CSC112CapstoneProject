@@ -60,11 +60,39 @@ public class Member {
         this.IDNumber = IDNumber;
     }
 
-
-    // Method to sort members by ID
     public static void sortByIDNumber(ArrayList<Member> memberInfo) {
-        Member.memberInfo.sort((m1, m2) -> Integer.compare(m1.getIDNumber(), m2.getIDNumber()));
+        // set boolean to false and length to the size
+        boolean isSorted = false;
+        int length = memberInfo.size();
+
+        while (!isSorted) {
+            isSorted = true;
+            for (int i = 0; i < length - 1; i++) {
+                // uses comparator to compare adjacent elements
+                if (new compare().compare(memberInfo.get(i), memberInfo.get(i + 1)) > 0) {
+                    // call swap
+                    swap(memberInfo, i, i + 1);
+                    // make the loop run again since a swap occurred
+                    isSorted = false;
+                }
+            }
+            // lowers size of list by 1
+            length = length - 1;
+        }
     }
+
+    // swap method
+    public static void swap(ArrayList<Member> memberInfo, int a, int b) {
+        // creates temporary variable for the swap and then swaps consecutive elements
+        Member temp = memberInfo.get(a);
+        memberInfo.set(a, memberInfo.get(b));
+        memberInfo.set(b, temp);
+    }
+
+
+
+
+
 
     // Method to search for a member by ID
     public static String searchByID(int IDNumber) {
