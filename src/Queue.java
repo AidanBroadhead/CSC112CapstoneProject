@@ -55,7 +55,7 @@ public class Queue extends Member {
         }
     }
 
-    // Get the size of the queue (number of members in the gym)
+    // Get the size of the queue
     public int size() {
         int size = 0;
         QueueNode current = front;

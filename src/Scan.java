@@ -49,7 +49,7 @@ public class Scan {
                 // Handle member scan-in or scan-out
                 if (scanInput.equals("m")) {
                     // Handle member entry
-                    Member.welcomeMember(scanner);  // Passing the scanner object here
+                    Member.welcomeMember(scanner);
                     gymQueue.enqueue(scanner);
                     count = addCount(count);
                     System.out.println("You were scanned in at: " + currentTime.format(formatter));
@@ -67,7 +67,7 @@ public class Scan {
                     System.out.println("A person has scanned out. Total number in gym: " + count);
                 } else if (scanInput.equals("p")) {
                     // Print all members to the output file
-                    Member.printAllMembers();  // This will call the static method from Member class
+                    Member.printAllMembers();
                     System.out.println("All members have been printed to the file.");
 
                 } else if (scanInput.equals("c")) {

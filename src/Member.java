@@ -17,8 +17,6 @@ public class Member {
     private int age;
     private int IDNumber;
 
-    // Random object for ID generation
-
     // ArrayList of members
     static ArrayList<Member> memberInfo = new ArrayList<>();
     static int tempID = 0;
@@ -63,7 +61,7 @@ public class Member {
     }
 
 
-    // Method to sort members by ID (using Java's built-in comparator)
+    // Method to sort members by ID
     public static void sortByIDNumber(ArrayList<Member> memberInfo) {
         Member.memberInfo.sort((m1, m2) -> Integer.compare(m1.getIDNumber(), m2.getIDNumber()));
     }
@@ -85,7 +83,7 @@ public class Member {
         System.out.println("Member ID: " + IDNumber);
     }
 
-    // Method to welcome a member (assumes the ID has been validated)
+    // Method to welcome a member
     public static void welcomeMember(Scanner scnr) {
         System.out.println("Enter your ID number:");
         int inputID = scnr.nextInt();
@@ -94,7 +92,7 @@ public class Member {
         tempID = inputID;
     }
 
-    // Method to create a new member (separated for clarity)
+    // Method to create a new member
     public static void createNewMember(Scanner scnr) {
         System.out.println("Enter your name:");
         String name = scnr.next();
@@ -111,8 +109,6 @@ public class Member {
 
         System.out.println("Here is your new ID number: " + newID);
     }
-
-
 
     public static void printAllMembers() {
         // Sort members by ID
@@ -131,7 +127,7 @@ public class Member {
                 writer.newLine();
                 writer.write("ID Number: " + member.getIDNumber());
                 writer.newLine();
-                writer.newLine();  // Add a blank line between members for readability
+                writer.newLine();
             }
             System.out.println("Member information has been written to the file successfully.");
         } catch (IOException e) {
@@ -139,8 +135,6 @@ public class Member {
         }
     }
 
-
-    // Method to generate a unique ID
     // Method to generate a unique ID
     private static int assignID() {
         int randomID = 0;
@@ -163,14 +157,11 @@ public class Member {
 
             attempts++;
 
-            // If 5000 attempts fail to generate a unique ID, exit to avoid infinite loop
             if (attempts >= 5000) {
                 throw new IllegalStateException("Unable to generate a unique ID, ID space exhausted.");
             }
         }
         return randomID;
     }
-
-
 
 }
