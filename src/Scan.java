@@ -25,6 +25,7 @@ public class Scan {
         // DateTimeFormatter for consistent timestamp format
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
 
+        // create queue
         Queue gymQueue = new Queue();
 
         // Main loop for gym operations

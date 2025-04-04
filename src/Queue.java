@@ -47,6 +47,7 @@ public class Queue extends Member {
 //        }
 //    }
 
+    // removes person from queue after an hour
     public void removeExpiredMembers() {
         LocalDateTime currentTime = LocalDateTime.now();
         while (front != null && currentTime.minusMinutes(1).isAfter(front.entryTime)) {
@@ -66,6 +67,7 @@ public class Queue extends Member {
         return size;
     }
 
+    // method to print elements in queue
     public void printQueue() {
         QueueNode current = front;
         int i = 1;

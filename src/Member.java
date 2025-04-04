@@ -110,6 +110,7 @@ public class Member {
         System.out.println("Here is your new ID number: " + newID);
     }
 
+    // method to print all the members into file
     public static void printAllMembers() {
         // Sort members by ID
         sortByIDNumber(memberInfo);
