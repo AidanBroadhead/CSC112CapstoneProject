@@ -89,11 +89,6 @@ public class Member {
         memberInfo.set(b, temp);
     }
 
-
-
-
-
-
     // Method to search for a member by ID
     public static String searchByID(int IDNumber) {
         for (Member member : memberInfo) {
@@ -112,12 +107,18 @@ public class Member {
     }
 
     // Method to welcome a member
-    public static void welcomeMember(Scanner scnr) {
+    public static boolean welcomeMember(Scanner scnr) {
         System.out.println("Enter your ID number:");
         int inputID = scnr.nextInt();
         String memberName = searchByID(inputID);
-        System.out.println("Welcome, " + memberName + "!");
-        tempID = inputID;
+        if (!memberName.equals("ID not found")) {
+            System.out.println("Welcome, " + memberName + "!");
+            tempID = inputID;
+            return true;
+        } else {
+            System.out.println("ID not found, please retry");
+            return false;
+        }
     }
 
     // Method to create a new member
