@@ -52,7 +52,12 @@ public class Queue extends Member {
         LocalDateTime currentTime = LocalDateTime.now();
         while (front != null && currentTime.minusMinutes(1).isAfter(front.entryTime)) {
             System.out.println("Member " + front.member.getName() + " has been in the gym for over a minute. Removing...");
-            front = front.next;  // Remove the front member
+            if (front.next != null) {
+                front = front.next;  // Remove the front member
+            } else {
+                front = null;
+                rear = null;
+            }
         }
     }
 
